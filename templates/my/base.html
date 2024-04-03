@@ -1,0 +1,173 @@
+
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  
+{%include 'my/css.html'%}
+   
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                <img src="{% static 'my/img/logo1.png'%}" height="120px" width="120px">
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="/my">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                User Console
+            </div>
+
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="/my/user">
+                    <i class="fas fa-fw fa-user"></i>
+                    <span>User Management</span></a>
+            </li> -->
+
+            <!-- Nav Item - Product Management -->
+            <li class="nav-item active">
+                <a class="nav-link" href="/my/products">
+                    <i class="fas fa-shopping-bag fa-lg me-3 fa-fw"></i>
+                    <span>Product Management</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/orders">
+                    <i class="fas fa-shopping-bag fa-lg me-3 fa-fw"></i>
+                    <span>My Orders</span></a>
+            </li>
+
+            <!-- Nav Item - Order Management -->
+            <li class="nav-item">
+                <a class="nav-link" href="/my/orders" title="All orders bought from you">
+                    <i class="fas fa-box fa-lg me-3 fa-fw"></i>
+                    <span>Orders Placed</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/my/inbox">
+                    <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                    <span>Chat Messages</span></a>
+            </li>
+
+            <!-- Nav Item - Reporting and Analytics Collapse Menu 
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Reporting and Analytics</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="/my/analytics/user">User Analytics</a>
+                        <a class="collapse-item" href="/my/analytics/performance">Product Performance</a>
+                        <a class="collapse-item" href="/my/analytics/orders">Order Analytics</a>
+                    </div>
+                </div>
+            </li> -->
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content ">
+
+                {%include 'my/topnav.html' %}
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- DataTales Example -->
+                    {% block body %}
+                    {%endblock%}
+
+                </div>
+                <!-- End of Page Content -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; 2024 Thuo Michelle Wanjiku</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-success" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Logout Modal-->
+{%include 'my/js.html' %}
+{%block js%}{%endblock%}
+
+</body>
+
+</html>

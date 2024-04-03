@@ -1,0 +1,10 @@
+
+
+{{fname}} {{lname}}, Placed an order
+Items Ordered
+
+    {%for c in cart%}
+        {{c.qty}}
+        {{c.product.productName}}
+        {{c.product.price}} each
+    {%endfor%}

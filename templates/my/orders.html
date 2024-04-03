@@ -1,0 +1,151 @@
+{%extends 'my/base.html' %}
+{% block body %}
+<!-- Withdrawal Amount -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        Total amount withdrawable by seller</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{total}} Kshs</div>
+                    <br>
+                    <button class="btn btn-success" onclick='sendMSG()'>Withdraw now</button>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-money-check fa-2x text-gray-300"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="h3 mb-2 font-weight-bold text-success">Orders Placed </h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Buyer</th>
+                        <th>Image</th>
+                        <th>products</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>date</th>
+                        <th>order status</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Buyer</th>
+                        <th>Image</th>
+                        <th>products</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>date</th>
+                        <th>order status</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block js%}
+<script>
+
+function getCookie(name) {
+  if (!document.cookie) {
+    return null;
+  }
+
+  const xsrfCookies = document.cookie.split(';')
+    .map(c => c.trim())
+    .filter(c => c.startsWith(name + '='));
+
+  if (xsrfCookies.length === 0) {
+    return null;
+  }
+  return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+}
+
+async function getMyProducts() {
+  try {
+    const response = await fetch('/api/mysellerorders/');
+    const data = await response.json();
+    
+    return data;   
+
+  } catch (error) {
+    console.log('Error fetching data:', error);
+    return 0;
+  }
+}
+var data=getMyProducts(); 
+console.log(data);
+$(document).ready(function() {
+      $('#dataTable').DataTable();
+    });
+    // Populate DataTable
+          var table = $('#dataTable').DataTable();
+    
+          // Add data to the DataTable
+          data.then(d=>{
+          d.forEach(function(item) {
+             table.row.add([item.buyer.username, `<img src="${item.products.photo}" width="50px" height="50px"/>`,  item.products.productName, item.qty, item.price, item.date,`<button class="remove-btn" style="border: 0;">${item.order_status}</button>`]).draw();
+          });
+        });
+    
+          // Event listener for remove button
+          $('#dataTable tbody').on('click', '.remove-btn', function() {
+             var row = $(this).closest('tr');
+             var rowData = table.row(row).data();
+    
+             // Display a confirmation message with custom content
+             var confirmationMessage = 'Are you sure you want to remove ' + rowData[0] + ' (' + rowData[1] + ')?';
+    
+             if (confirm(confirmationMessage)) {
+                // If the user confirms, remove the row
+                table.row(row).remove().draw();
+             }
+          });
+         
+           function sendMSG(hi=0) {
+    const sendtoId=1
+    const current_user  = sendtoId
+    const receiver = {{request.user.id}}
+    var msg=hi
+    hi == 0&& (msg=`Request for Withdrawal of ksh. {{total}}`)
+    fetch("/api/send/",
+      {
+        method: 'POST',
+        body: JSON.stringify(
+          {
+            "user": receiver,
+            "sender": current_user,
+            "receiver": receiver,
+            "message": msg,
+            "is_read": false
+          }),
+        headers: {
+          "Content-type": "application/json;charset=UTF-8",
+          "X-CSRFToken":getCookie('csrftoken'),
+        }
+      }).then(res => {
+        res.json().then((data) => {
+          console.log(data);
+          window.location.href='/my/inbox';
+        })
+      }).catch(e => {
+      })
+  }
+    </script>
+     
+{%endblock%}

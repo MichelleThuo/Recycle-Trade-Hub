@@ -1,0 +1,141 @@
+{%extends 'base.html'%}
+{%block body %}
+<div class="container-fluid" bis_skin_checked="1">
+
+    <!-- DataTales Example -->
+    {% lorem 1 p random %}
+    <div class="card shadow mb-4" bis_skin_checked="1">
+        <div class="card-header py-3" bis_skin_checked="1">
+            <h6 class="h3 mb-2 font-weight-bold text-success">Product Details</h6>
+        </div>
+        <div class="card-body" bis_skin_checked="1">
+            <div class="table-responsive" bis_skin_checked="1">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4" bis_skin_checked="1">
+                    <div class="row" bis_skin_checked="1">
+                        <div class="col-sm-12 col-md-6" bis_skin_checked="1">
+                            <div class="dataTables_length" id="dataTable_length" bis_skin_checked="1"><label>Show
+                                    <select name="dataTable_length" aria-controls="dataTable"
+                                        class="custom-select custom-select-sm form-control form-control-sm">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> entries</label></div>
+                        </div>
+                        <div class="col-sm-12 col-md-6" bis_skin_checked="1">
+                            <div id="dataTable_filter" class="dataTables_filter" bis_skin_checked="1">
+                                <label>Search:<input type="search" class="form-control form-control-sm" placeholder=""
+                                        aria-controls="dataTable"></label></div>
+                        </div>
+                    </div>
+                    <div class="row" bis_skin_checked="1">
+                        <div class="col-sm-12" bis_skin_checked="1">
+                            <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0"
+                                role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable"
+                                            rowspan="1" colspan="1" style="width: 57px;"
+                                            aria-label="Seller: activate to sort column descending"
+                                            aria-sort="ascending">Seller</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1"
+                                            colspan="1" style="width: 59px;"
+                                            aria-label="Product Name: activate to sort column ascending">Product Name
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1"
+                                            colspan="1" style="width: 132px;"
+                                            aria-label="Photo: activate to sort column ascending">Photo</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1"
+                                            colspan="1" style="width: 86px;"
+                                            aria-label="Description: activate to sort column ascending">Description</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1"
+                                            colspan="1" style="width: 37px;"
+                                            aria-label="Price: activate to sort column ascending">Price</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1"
+                                            colspan="1" style="width: 49px;"
+                                            aria-label="Action: activate to sort column ascending">Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th rowspan="1" colspan="1">Seller</th>
+                                        <th rowspan="1" colspan="1">Product Name</th>
+                                        <th rowspan="1" colspan="1">Photo</th>
+                                        <th rowspan="1" colspan="1">Description</th>
+                                        <th rowspan="1" colspan="1">Price</th>
+                                        <th rowspan="1" colspan="1">Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {%for myp in myproducts%}
+                                    
+                                    <tr class="odd">
+                                        <td class="sorting_1">{{myp.seller.first_name}} {{myp.seller.last_name}}</td>
+                                        <td>{{myp.productName}}</td>
+                                        <td><img src="/media/{{myp.photo}}"
+                                                height="150px" width="150px"></td>
+                                        <td>{{myp.description}}</td>
+                                        <td>KSh {{myp.price}}</td>
+                                        <td><button class="remove-btn" style="border: 0;"><i
+                                                    class="fas fa-trash text-danger"></i></button></td>
+                                    </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" bis_skin_checked="1">
+                        <div class="col-sm-12 col-md-5" bis_skin_checked="1">
+                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite"
+                                bis_skin_checked="1">Showing 1 to 10 of 39 entries</div>
+                        </div>
+                        <div class="col-sm-12 col-md-7" bis_skin_checked="1">
+                            <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate"
+                                bis_skin_checked="1">
+                                
+                                <ul class="pagination">
+                                    {% if myproducts.has_previous %}
+                                    <li class="paginate_button page-item previous" id="dataTable_previous"><a
+                                        href="?page={{myproducts.previous_page_number}}" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                        class="page-link">Previous</a></li>
+                                {%else%}
+                                <li class="paginate_button page-item previous disabled" id="dataTable_previous"><a
+                                    href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0"
+                                    class="page-link">Previous</a></li>
+                                        {% endif %}
+                                    {%for num in ranges %}
+                                    {%if num == myproducts.number%}
+                                    <li class="paginate_button page-item active"><a href="?page={{num}}" aria-controls="dataTable"
+                                        data-dt-idx="1" tabindex="0" class="page-link">{{num}}</a></li>
+                                    {%else%}
+                                    <li class="paginate_button page-item"><a href="?page={{num}}" aria-controls="dataTable"
+                                        data-dt-idx="1" tabindex="0" class="page-link">{{num}}</a></li>
+                                    {% endif %}
+                                    
+
+                                    {%endfor%}
+                        {% if myproducts.has_next %}
+                                    <li class="paginate_button page-item next" id="dataTable_next">
+                                        <a href="?page={{myproducts.next_page_number}}"
+                                            aria-controls="dataTable" data-dt-idx="5" tabindex="0"
+                                            class="page-link">Next</a>
+                                        </li>
+                                        {%else%}
+                                        <li class="paginate_button page-item next disabled" id="dataTable_next">
+                                        <a href="#"
+                                            aria-controls="dataTable" data-dt-idx="5" tabindex="0"
+                                            class="page-link">Next</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{%endblock%}

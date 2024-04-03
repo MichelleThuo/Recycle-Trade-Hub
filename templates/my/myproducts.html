@@ -1,0 +1,249 @@
+{%extends 'my/base.html' %}
+{% block body %}
+<div class="modal fade" id="newProduct">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Add New Product</h4>
+            </div>
+
+            <div class="modal-body">
+                <form method="POST"  enctype="multipart/form-data" action='' class="mx-1 mx-md-4 needs-validation" novalidate>
+                    {%csrf_token%}
+                    <div class="row">
+                    <div class="col-6 mb-2">
+                        Product Name
+                        <div class="form-outline flex-fill mb-0">
+                            <input type="text" name="productName" id="productName" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="col-6 mb-2">
+                        Price
+                        <div class="form-outline flex-fill mb-0">
+                            <input name="price" type="number" id="price" class="form-control" placeholder="price" required />
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-6 mb-2">
+                        Photo
+                        <div class="form-outline flex-fill mb-0">
+                            <input type="file" accept="image/*" name="photo" id="photo" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="col-6 mb-2">
+                        Quantity
+                        <div class="form-outline flex-fill mb-0">
+                            <input name="qty" type="number" id="qty" class="form-control" placeholder="qty" required />
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Description
+                        <div class="form-outline flex-fill mb-0">
+                            <textarea class="form-control " name="description" id="description " cols="30" rows="5"></textarea>
+                        </div>
+                        </div>
+                        
+                    </div>
+                    <button type="submit" class="btn btn-success mb-2 ml-2">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editProductModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Edit Product</h4>
+            </div>
+                        <div class="modal-body">
+                <form method="POST"  enctype="multipart/form-data" action='/myprofile/updatemyproduct/' class="mx-1 mx-md-4 needs-validation" novalidate>
+                    {%csrf_token%}
+                    <div class="row">
+                    <div class="col-6 mb-2">
+                        Product Name
+                        <div class="form-outline flex-fill mb-0">
+                            <input type="hidden" id="product_id" name="p_id">
+                            <input type="text" id="product_name" name="p_name" id="productName" class="form-control" required />
+                        </div>
+                    </div>
+                                        
+                    
+                    <div class="col-6 mb-2">
+                        Price
+                        <div class="form-outline flex-fill mb-0">
+                            <input name="product_price" id="product_price"  type="number" id="product_price" class="form-control" placeholder="price" required />
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-6 mb-2">
+                        Photo
+                        <div class="form-outline flex-fill mb-0">
+                            <input type="file" accept="image/*" name="photo" id="photo" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="col-6 mb-2">
+                        Quantity
+                        <div class="form-outline flex-fill mb-0">
+                            <input name="product_qty" id="product_qty" type="number" id="qty" class="form-control" placeholder="qty in Tonnes" required />
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            Description
+                        <div class="form-outline flex-fill mb-0">
+                            <textarea class="form-control " id="product_description" name="product_description" cols="30" rows="5"></textarea>
+                        </div>
+                        </div>
+                        
+                    </div>
+                    <button type="submit" class="btn btn-success mb-2 ml-2">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="h3 mb-2 font-weight-bold text-success">Product Details</h6>    
+        <a class="btn btn-outline-success mx-2" href="#" data-toggle="modal" data-target="#newProduct">Add</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Product Name</th>
+                        <th>Photo</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Remove Product</th>
+                        <th>Edit Product</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>id</th>
+                        <th>Product Name</th>
+                        <th>Photo</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Remove Product</th>
+                        <th>Edit Product</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block js%}
+<script> 
+
+const editMyProducts = (id, productName, description,price, qty)=>{
+    document.getElementById('product_id').value=id;
+    document.getElementById('product_name').value=productName;
+    document.getElementById('product_description').innerHTML=description;
+    document.getElementById('product_price').value=price;
+    document.getElementById('product_qty').value=qty;
+}
+async function getMyProducts() {
+  try {
+    const response = await fetch('/api/myproducts/');
+    const data = await response.json();
+    
+    return data;   
+
+  } catch (error) {
+    console.log('Error fetching data:', error);
+    return 0;
+  }
+}
+async function delMyProducts(id) {
+  try {
+    const response = await fetch(`/myprofile/delete/${id}`);
+    const data = await response.json();
+    
+    return data;   
+
+  } catch (error) {
+    console.log('Error fetching data:', error);
+    return 0;
+  }
+}
+var data=getMyProducts(); 
+console.log(data);
+$(document).ready(function() {
+      $('#dataTable').DataTable();
+    });
+    // Populate DataTable
+          var table = $('#dataTable').DataTable();
+    
+          // Add data to the DataTable
+          // Add data to the DataTable
+data.then(d=>{
+    d.forEach(function(item) {
+        table.row.add([
+            item.id,
+            item.productName,
+            `<img src="${item.photo}" height="150px" width="150px">`,
+            item.description,item.price,
+            `<button class="remove-btn" onclick="delMyProducts(${item.id})" style="border: 0;"><i class="fas fa-trash text-danger"></i></button>   `,
+            `<button class="edit-btn" onclick="editMyProducts('${item.id}', '${item.productName}', '${item.description}','${item.price}', '${item.qty}')" style="border: 0;"><i class="fas fa-edit text-success"></i></button>`
+        ]).draw();
+    });
+});
+
+    
+          // Event listener for remove button
+          $('#dataTable tbody').on('click', '.remove-btn', function() {
+             var row = $(this).closest('tr');
+             var rowData = table.row(row).data();
+    
+             // Display a confirmation message with custom content
+             var confirmationMessage = 'Are you sure you want to remove ' + rowData[0] + ' (' + rowData[1] + ')?';
+    
+             if (confirm(confirmationMessage)) {
+                // If the user confirms, remove the row
+                table.row(row).remove().draw();
+             }
+          });
+
+          // Event listener for edit button
+$('#dataTable tbody').on('click', '.edit-btn', function() {
+    var row = $(this).closest('tr');
+    var rowData = table.row(row).data();
+
+    // Populate the modal with the row data
+    $('#editProductId').val(rowData[0]);
+    $('#editProductName').val(rowData[1]);
+    $('#editPrice').val(rowData[4]);
+    $('#editQty').val(rowData[5]);
+    $('#editDescription').val(rowData[3]);
+
+    // Show the modal
+    $('#editProductModal').modal('show');
+});
+
+
+    </script>
+     
+{%endblock%}

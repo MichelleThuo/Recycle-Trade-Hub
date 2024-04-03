@@ -1,0 +1,185 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS Link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <title>Login</title>
+    <style>
+        /*
+          body {
+            background-color: #28a745;} /* bg-success */
+
+        
+            .gradient-custom {
+      /* fallback for old browsers */
+      background-image: linear-gradient(#71C913, #61B100);
+      /* opacity: 0.5; */
+
+      /* Chrome 10-25, Safari 5.1-6 */
+      /* background: -webkit-linear-gradient(to right, rgba(0,255,72,0.9), rgba(8,175,58,0.9)); */
+
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      /* background: linear-gradient(to right, rgba(0,255,72,0.9), rgba(8,175,58,0.9)) */
+    }
+
+        .card {
+            margin-top: 50px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body class="h- 100 gradient-custom">
+    <div class="container">
+        <div class="card">
+            
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <button type="button" class="btn btn-close" data-bs-dismiss="alert">
+                        </button>
+                        <strong>Error!</strong> {{ m }}.
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="logo" height="77px" width="77px"
+          style="max-height: 100%; max-width: 100%" />
+          
+            <h2 class="text-center">Login</h2>
+            <form method="POST" action='/login/' class="mx-1 mx-md-4 needs-validation" novalidate>
+                {% csrf_token %}
+                <!--Email Address-->
+                <div class="mb-3">
+                    <label for="emailLogin" class="form-label">Email Address</label>
+                    <input type="email" name="email" id="emailLogin" class="form-control" placeholder="Email Address" required />
+                </div>
+                <!--Password-->
+                <div class="mb-3">
+                    <label for="passwordLogin" class="form-label">Password</label>
+                    <input name="password" type="password" id="passwordLogin" class="form-control" placeholder="Password" required />
+                </div>
+                <!--Remember me FT Forgot password-->
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="" id="form2Example3c" required />
+                    <label class="form-check-label" for="form2Example3">
+                        Remember me <a class="mb-2 px-4" href="/password-reset/">Forgot password?</a>
+                    </label>
+                </div>
+                <!--Login Button-->
+                <button type="submit" class="btn btn-success mb-2">Login</button>
+                <script>
+                    function myFunction() {
+                        window.location.href="home.html";
+                    }
+                </script>
+                <!--Don't have an account-->
+                <div class="form-check mb-3">
+                    <label class="form-check-label" for="form2Example3">
+                        Don't have an account? <a href="/register">Register here</a>
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    'use strict';
+
+    var form = document.querySelector('card');
+
+    form.addEventListener('submit', function (event) {
+       // event.preventDefault(); 
+
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+        } else {
+            if (!validateEmail()) {
+                event.stopPropagation();
+                return;
+            }
+
+            if (!validatePassword()) {
+                event.stopPropagation();
+                return;
+            }
+
+            // If form is valid, proceed with redirection or other actions
+            // This part of the code depends on your specific requirements
+            // For now, let's just alert a message
+            alert('Login successful!');
+
+            // Redirect the user to another page
+            window.location.href = "home.html";
+        }
+
+        form.classList.add('was-validated');
+    }, false);
+
+    // Custom validation functions
+    function validateEmail() {
+        var emailInput = document.getElementById("emailLogin").value;
+        console.log("Email input:", emailInput);
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+        var commonExtensions = ['gmail.com', 'yahoo.com', 'hotmail.com']; // Add more common email extensions as needed
+        var emailParts = emailInput.split('@');
+        if (!emailRegex.test(emailInput) || !commonExtensions.includes(emailParts[1])) {
+            alert("Please enter a valid email address");
+            return false;
+        }
+        return true;
+    }
+
+    function validatePassword() {
+    var passwordInput = document.getElementById("passwordLogin").value;
+    console.log("Password input:", passwordInput);
+
+    // Regular expressions for each condition
+    var lowercaseRegex = /[a-z]/;
+    var uppercaseRegex = /[A-Z]/;
+    var digitRegex = /\d/;
+    var symbolRegex = /[@$!%*?&#]/;
+
+    // Check if all conditions are met
+    if (!lowercaseRegex.test(passwordInput) ||
+        !uppercaseRegex.test(passwordInput) ||
+        !digitRegex.test(passwordInput) ||
+        !symbolRegex.test(passwordInput) ||
+        passwordInput.length < 8) {
+        alert("Please enter a password with a mix of  at least one lowercase letter, one uppercase letter, one digit, one symbol, and a minimum length of 8 characters.");
+        return false;
+    }
+    return true;
+}
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+.env
+*.env*
+statics/
+sent_emails/
+cgi-bin/
+.well-known/
+public/
+media/product
+media/user_profile
+.htaccess
+ipn.js
+db.sqlite3
+db0.sqlite3
+e.sqlite3
+stderr.log
+.venv/

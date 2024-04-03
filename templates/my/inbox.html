@@ -1,0 +1,256 @@
+{%extends 'my/base.html' %}
+{%load static %}
+{% block body %}
+<style>
+body{
+	background: #EEEEEE;
+	font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+.card{
+	width: 100%;
+	border: none;
+	border-radius: 15px;
+}
+.adiv{
+	background: #89e69a;
+	border-radius: 15px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+	font-size: 16px;
+	height: 46px;
+}
+.chat{
+	border: none;
+	background: #E2FFE8;
+	font-size: 16px;
+	border-radius: 20px;
+}
+.bg-white{
+	border: 1px solid #E7E7E9;
+	font-size: 16px;
+	border-radius: 20px;
+}
+.myvideo img{
+	border-radius: 20px
+}
+.dot{
+	font-weight: bold;
+}
+.form-control{
+	border-radius: 12px;
+	border: 1px solid #F0F0F0;
+	font-size: 16px;
+}
+.form-control:focus{
+	box-shadow: none;
+	}
+.form-control::placeholder{
+	font-size: 16px;
+	color: #C4C4C4;
+}
+  .inbox {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .inbox-card{
+    cursor: pointer;
+  }
+  .inbox-card:hover{
+    opacity: 0.8;
+  }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<div class="row">
+    <div class="col-lg-3 col-sm-3 col-md-3 card mx-auto border-info" id="rtcinbox" style="height: 70vh;">
+        <!-- Inbox content here -->
+    </div>
+    <div class="d-flex justify-content-center col-lg-8 col-sm-8 col-md-8" style="overflow-y: hidden; position: relative;">
+        <div class="card" style="height: 48vh; overflow-y: auto;">
+            <div id="rthmsg" onload="scrollFunc()">
+                <!-- Chat messages will be appended here -->
+            </div>
+        </div>
+        <div class="form-group px-3" style="position: absolute; bottom: 0; width: 100%; height: 20vh;">
+            <input type="hidden" id="seceiver_id">
+            <textarea class="form-control" rows="2" id="msg-text" placeholder="Type your message"></textarea>
+            <br>
+            <input type="submit" value="Send" onclick="sendMsg()" class="btn btn-success" />
+        </div>
+    </div>
+</div>
+
+
+
+</script>
+{%endblock%}
+{%block js %}
+<script>
+function MyInbox(){
+  const bx=document.getElementById('rtcinbox')
+  fetch('/api/inbox/{{request.user.id}}').then(
+    (res) => {
+      res.json().then(
+        (data) => {
+        bx.innerHTML=''
+          data.forEach((msg) => {
+            console.log(msg)
+            if(msg.sender=='{{request.user.id}}'){
+            bx.innerHTML += `
+            <div class="border-bottom inbox-card" onclick="getMessage(${msg.receiver})">
+            <div class="d-flex align-items-center pt-2">
+            <img class="rounded rounded-circle m-1" src="${msg.receiver_profile.image}" width="30" height="30">
+            <h6>${msg.receiver_profile.user_details.first_name}</h6>
+            </div>
+            <div class="inbox ml-2 py-1 px-3">${msg.message} </div>
+            </div>`
+          }else{
+            bx.innerHTML += `
+            <div class="border-bottom inbox-card" onclick="getMessage(${msg.sender})">
+            <div class="d-flex align-items-center pt-2">
+            <img class="rounded rounded-circle m-1" src="${msg.sender_profile.image}" width="30" height="30">
+            <h6>${msg.sender_profile.user_details.first_name}</h6>
+            </div>
+            <div class="inbox ml-2 py-1 px-3">${msg.message} </div>
+            </div>
+            `
+          }
+          })
+        }
+      )
+    }
+  ).catch(e => {
+  })
+}
+
+
+
+setInterval(MyInbox, 1000)
+
+
+  const scrollFunc=()=>{
+            try{
+                var offcanvasRef = document.getElementById('rthmsg');
+                offcanvasRef.scrollTop = offcanvasRef.scrollHeight;
+            }
+            catch(err){}         
+    }
+
+  function getMessage(id) {
+    document.getElementById('seceiver_id').value=id;
+    fetch(`/api/chat/{{request.user.id}}/${id}`).then((res) => {
+      res.json().then((data) => {
+        document.getElementById('rthmsg').innerHTML = ''
+        data.forEach(
+          (msg) => {
+
+            if(msg.sender=='{{request.user.id}}'){
+              document.getElementById('rthmsg').innerHTML += `
+              <div class="d-flex flex-row p-3">
+            <img src="${msg.receiver_profile.image}" class="rounded rounded-circle" width="40" height="40">
+            <div class="chat ml-2 p-3"> ${msg.message}</div>
+            </div>
+              `;
+            }
+            else{
+            document.getElementById('rthmsg').innerHTML += `
+            <div class="d-flex flex-row p-3">
+              <div class="bg-white ms-auto p-3">
+              <span class="text-muted"> ${msg.message}</span>
+              </div>
+              <img src="${msg.receiver_profile.image}" class="rounded rounded-circle" width="40" height="40">
+              </div>
+          `;
+            }
+          }
+        )
+      })
+    }).catch(e => {
+    })
+  }
+
+
+  function getCookie(name) {
+  if (!document.cookie) {
+    return null;
+  }
+
+  const xsrfCookies = document.cookie.split(';')
+    .map(c => c.trim())
+    .filter(c => c.startsWith(name + '='));
+
+  if (xsrfCookies.length === 0) {
+    return null;
+  }
+  return decodeURIComponent(xsrfCookies[0].split('=')[1]);
+}
+
+  function sendMsg() {
+    const current_user  = document.getElementById('seceiver_id').value
+    const receiver = '{{request.user.id}}'
+    const msgBX = document.getElementById('msg-text')
+    msg=msgBX.value;
+    fetch("/api/send/",
+      {
+        method: 'POST',
+        body: JSON.stringify(
+          {
+            "user": current_user,
+            "sender": current_user,
+            "receiver": receiver,
+            "message": msg,
+            "is_read": false
+          }),
+        headers: {
+          "Content-type": "application/json;charset=UTF-8",
+          "X-CSRFToken":getCookie('csrftoken'),
+        }
+      }).then(res => {
+        res.json().then((data) => {
+          console.log(data);
+          getMessage(current_user)
+          msgBX.value='';
+        })
+      }).catch(e => {
+      })
+  }
+
+  //Message Notifications
+  function showNotification(message) {
+  if (Notification.permission === "granted") {
+    new Notification("New Message", { body: message });
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      if (permission === "granted") {
+        new Notification("New Message", { body: message });
+      }
+    });
+  }
+}
+
+if (msg.sender == '{{request.user.id}}') {
+  bx.innerHTML += `
+  <div class="border-bottom inbox-card" onclick="getMessage(${msg.receiver})">
+  <div class="d-flex align-items-center pt-2">
+  <img class="rounded rounded-circle m-1" src="${msg.receiver_profile.image}" width="30" height="30">
+  <h6>${msg.receiver_profile.user_details.first_name}</h6>
+  </div>
+  <div class="inbox ml-2 py-1 px-3">${msg.message} </div>
+  </div>`;
+  // Show notification
+  showNotification(msg.message);
+} else {
+  bx.innerHTML += `
+  <div class="border-bottom inbox-card" onclick="getMessage(${msg.sender})">
+  <div class="d-flex align-items-center pt-2">
+  <img class="rounded rounded-circle m-1" src="${msg.sender_profile.image}" width="30" height="30">
+  <h6>${msg.sender_profile.user_details.first_name}</h6>
+  </div>
+  <div class="inbox ml-2 py-1 px-3">${msg.message} </div>
+  </div>`;
+}
+
+</script>
+{%endblock%}

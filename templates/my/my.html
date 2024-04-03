@@ -1,0 +1,210 @@
+{%extends 'my/base.html' %}
+
+{% block body %}
+<form action="" method="post" enctype="multipart/form-data">
+  {%csrf_token%}
+<div class="wrapper" bis_skin_checked="1">
+  <!-- Your content goes here -->
+  <div class=" card " bis_skin_checked="1">
+    <div class="card-body" bis_skin_checked="1">
+
+      <div class="row" style="margin-left: 5px;" bis_skin_checked="1">
+        <div class="form-group text-center" bis_skin_checked="1">
+          <img src="{{profile.image.url}}" width="80px" height="80px" style="border-radius: 50% ;display: block; object-fit: cover;" alt="Profile Picture" id="profilePicture"
+            class="img-fluid rounded-circle mb-3">
+          <input type="file" id="profilePictureInput" name="image" class="form-control-file" accept="image/*">
+        </div>
+      </div>
+
+      <hr>
+    
+      <div class="row" bis_skin_checked="1">
+        <div class="col-sm-4" bis_skin_checked="1">
+          <p class="mb-0">Full Name:</p>
+        </div>
+        <div class="col-sm-8" bis_skin_checked="1">
+          <p class="text-muted mb-0">{{user.first_name}} {{user.last_name}}</p>
+        </div>
+      </div>
+      <hr>
+      <div class="row" bis_skin_checked="1">
+        <div class="col-sm-4" bis_skin_checked="1">
+          <p class="mb-0">Email Address:</p>
+        </div>
+        <div class="col-sm-8" bis_skin_checked="1">
+          <p class="text-muted mb-0">{{user.email}}</p>
+        </div>
+      </div>
+      <hr>
+      <div class="row" bis_skin_checked="1">
+        <div class="col-sm-4" bis_skin_checked="1">
+          <p class="mb-0">Mobile Number:</p>
+        </div>
+        <div class="col-sm-8" bis_skin_checked="1">
+          <p class="text-muted mb-0">{{profile.phone}}</p>
+        </div>
+      </div>
+      <hr>
+
+      <div class="row align-items-center" bis_skin_checked="1">
+        <div class="col-sm-4" bis_skin_checked="1">
+          <p class="mb-0" id="organizationLabel">Organizational affiliation:</p>
+        </div>
+        <div class="col-sm-8 d-flex align-items-center justify-content-between" bis_skin_checked="1">
+          <p class="text-muted mb-0" id="organizationText"></p>
+          <!-- Edit Button -->
+          <button class="btn" id="editButton">
+            <i class="fas fa-edit text-success"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="card-footer text-right mt-2" bis_skin_checked="1">
+        <button type="submit" class="btn btn-success mb-2 ml-2">Save</button>
+        <!-- <button class="btn btn-danger mb-2 ml-2">Logout</button> -->
+      </div>
+    </div>
+    </div>
+    </div>
+    </form>
+    
+
+    <script>
+      $(document).ready(function () {
+        // Preview selected profile picture
+        $("#profilePictureInput").change(function () {
+          readURL(this);
+        });
+
+        // Submit form
+        $("#profileForm").submit(function (event) {
+          event.preventDefault();
+          // Add your logic to handle form submission, e.g., updating the user profile on the server
+        });
+
+        // Function to preview selected image
+        function readURL(input) {
+          if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              $("#profilePicture").attr("src", e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+          }
+        }
+      });
+    </script>
+
+    <script>
+      document.getElementById('editButton').addEventListener('click', function () {
+        // Get the existing content of the paragraph
+        var currentContent = document.getElementById('organizationText').innerText;
+
+        // Replace the paragraph with an input field
+        var inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.value = currentContent;
+        inputField.className = 'form-control'; // Bootstrap class for styling
+        inputField.id = 'organizationInput'; // Add an ID for easy access
+
+        // Replace the paragraph with the input field
+        document.getElementById('organizationText').replaceWith(inputField);
+
+        // Change the button to a save button
+        var editButton = document.getElementById('editButton');
+        editButton.innerHTML = '<i class="fas fa-save text-success"></i>';
+        editButton.removeEventListener('click', this); // Remove the previous click event listener
+        editButton.addEventListener('click', saveFunction); // Add a new click event listener
+      });
+
+      function saveFunction() {
+        // Get the input field value
+        var updatedContent = document.getElementById('organizationInput').value;
+
+        // Replace the input field with a new paragraph
+        var newParagraph = document.createElement('p');
+        newParagraph.className = 'text-muted mb-0';
+        newParagraph.innerText = updatedContent;
+
+        // Replace the input field with the new paragraph
+        document.getElementById('organizationInput').replaceWith(newParagraph);
+
+        // Change the button back to an edit button
+        var editButton = document.getElementById('editButton');
+        editButton.innerHTML = '<i class="fas fa-edit text-success"></i>';
+        editButton.removeEventListener('click', this); // Remove the previous click event listener
+        editButton.addEventListener('click', editFunction); // Add a new click event listener
+      }
+    </script>
+
+      <script>
+        document.getElementById('passwordEditButton').addEventListener('click', function () {
+          // Get the existing content of the paragraph
+          var currentContent = document.getElementById('passwordText').innerText;
+
+          // Replace the paragraph with an input field of type password
+          var inputField = document.createElement('input');
+          inputField.type = 'password';
+          inputField.value = currentContent;
+          inputField.className = 'form-control'; // Bootstrap class for styling
+          inputField.id = 'passwordInput'; // Add an ID for easy access
+
+          // Replace the paragraph with the input field
+          document.getElementById('passwordText').replaceWith(inputField);
+
+          // Change the button to a save button
+          var passwordEditButton = document.getElementById('passwordEditButton');
+          passwordEditButton.innerHTML = '<i class="fas fa-save text-success"></i>';
+          passwordEditButton.removeEventListener('click', this); // Remove the previous click event listener
+          passwordEditButton.addEventListener('click', savePassword); // Add a new click event listener
+        });
+
+        function savePassword() {
+          // Get the input field value
+          var updatedContent = document.getElementById('passwordInput').value;
+
+          // Replace the input field with a new paragraph
+          var newPasswordParagraph = document.createElement('p');
+          newPasswordParagraph.className = 'text-muted mb-0';
+          newPasswordParagraph.innerText = '********';
+
+          // Replace the input field with the new paragraph
+          document.getElementById('passwordInput').replaceWith(newPasswordParagraph);
+
+          // Change the button back to an edit button
+          var passwordEditButton = document.getElementById('passwordEditButton');
+          passwordEditButton.innerHTML = '<i class="fas fa-edit text-success"></i>';
+          passwordEditButton.removeEventListener('click', this); // Remove the previous click event listener
+          passwordEditButton.addEventListener('click', editPassword); // Add a new click event listener
+        }
+
+        function editPassword() {
+          // Get the existing content of the paragraph
+          var currentContent = document.getElementById('passwordText').innerText;
+
+          // Replace the paragraph with an input field of type password
+          var inputField = document.createElement('input');
+          inputField.type = 'password';
+          inputField.value = currentContent;
+          inputField.className = 'form-control'; // Bootstrap class for styling
+          inputField.id = 'passwordInput'; // Add an ID for easy access
+
+          // Replace the paragraph with the input field
+          document.getElementById('passwordText').replaceWith(inputField);
+
+          // Change the button to a save button
+          var passwordEditButton = document.getElementById('passwordEditButton');
+          passwordEditButton.innerHTML = '<i class="fas fa-save text-success"></i>';
+          passwordEditButton.removeEventListener('click', this); // Remove the previous click event listener
+          passwordEditButton.addEventListener('click', savePassword); // Add a new click event listener
+        }
+      </script>
+    <script>
+      function myFunction() {
+        window.location.href = "/";
+      }
+    </script>
+
+{%endblock%}
+
+{%block js%}{%endblock%}

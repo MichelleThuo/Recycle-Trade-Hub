@@ -1,0 +1,445 @@
+{% extends "base.html" %}
+{%load static %}
+{% block css %}
+    <style>
+        .words {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 19px;
+            font-family: 'brush-tipTexe TRIAL', sans-serif;
+            color: #09A76D;
+            margin-left: -10px;
+        }
+
+        .words p{
+            margin: -4px;
+        }
+
+      
+
+
+
+#messenger {
+  height: 150px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: monospace;
+  font-size: 40px;
+  white-space: nowrap;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.9);
+}
+
+
+
+
+
+
+
+/* Additional Styles */
+    .input-group {
+        position: relative;
+    }
+
+    .animated-input {
+        transition: 0.3s;
+        z-index: 1;
+    }
+
+    .animated-input:focus,
+    .animated-input:not(:placeholder-shown) {
+        padding: 20px; /* Adjust as needed */
+        background-color: #fff; /* Adjust as needed */
+        color: #000; /* Adjust as needed */
+    }
+
+
+    .animated-input::placeholder {
+    color: rgba(0, 0, 0, 0.8); /* Placeholder text color */
+    opacity: 1; /* Placeholder text opacity */
+}
+    
+
+
+
+
+
+/* Styling for the image background section */
+        .background-section {
+            background-image: url("{% static 'images/background.webp'%}"); /* Add the path to your background image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #000;
+            text-align: center;
+            padding: 250px 0;
+        }
+
+/* Styling for the copyright section */
+        .footer {
+	padding: 2px;
+	position: relative;
+	font-size: 14px;
+            }
+
+
+    </style>
+    {% endblock  %}
+
+    {% block body %}
+
+<!-- Search Section -->
+<section class="background-section">
+    <div class="container">
+    	<div class="text-wrap text-sm-nowrap" id="messenger" style="margin-top: -150px; position: relative;"></div>
+
+
+<!-- Search Bar Section -->
+<section class="py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-8">
+                <form class="text-center" action='search' method='GET'>
+                    <!-- Search Bar -->
+                    <div class="input-group">
+                        <input type="text" name='q' class="form-control animated-input" id="searchInput" placeholder="Search... " aria-label="Search" aria-describedby="searchIcon">
+                        <div class="input-group-append">
+                            <button class="input-group-text" id="searchIcon"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    </div>
+</section>
+
+
+<!--Contact Us-->
+		<section id="contactUs">
+    
+
+        <!--Get in touch with us-->
+        
+        <h1 class="text-center mt-1">Get in touch with us</h1>
+
+        <!--Underline-->
+<div class="border border-dark" style="margin: 10px auto; width: 50px;"></div>
+
+<form class="shadow-lg py-2 px-2" method="POST" action="https://formspree.io/f/xdoqlqln">
+        <!--Form-->
+        <div class="row justify-content-center">
+            <div class="col-sm-8">
+                <div class="form-group">
+
+                        <!--Name-->
+                        <input type="text" name="names" class="form-control mt-2" placeholder="Name">
+
+                        <!--Email Address-->
+                        <input type="email" name="email" class="form-control mt-2" placeholder="Email Address">
+
+                        <!--Your Message-->
+                        <textarea class="form-control mt-2" name="message" placeholder="Your Message"></textarea>
+
+                        <!--Button-->
+                        <button class="btn btn-success mt-3" onclick="alert('Your message has been sent :D');">
+                            <i class="fas fa-paper-plane"></i>&nbsp;Send Message
+                        </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+
+{% endblock  %}
+<!-- Bootstrap JS Links (at the end of the body) -->
+
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    'use strict';
+
+    var form = document.querySelector('#loginModal form');
+
+    form.addEventListener('submit', function (event) {
+       // event.preventDefault(); 
+
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+        } else {
+            if (!validateEmail()) {
+                event.stopPropagation();
+                return;
+            }
+
+            if (!validatePassword()) {
+                event.stopPropagation();
+                return;
+            }
+
+            // If form is valid, proceed with redirection or other actions
+            // This part of the code depends on your specific requirements
+            // For now, let's just alert a message
+            alert('Login successful!');
+
+            // Redirect the user to another page
+            window.location.href = "home.html";
+        }
+
+        form.classList.add('was-validated');
+    }, false);
+
+    // Custom validation functions
+    function validateEmail() {
+        var emailInput = document.getElementById("emailLogin").value;
+        console.log("Email input:", emailInput);
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+        var commonExtensions = ['gmail.com', 'yahoo.com', 'hotmail.com']; // Add more common email extensions as needed
+        var emailParts = emailInput.split('@');
+        if (!emailRegex.test(emailInput) || !commonExtensions.includes(emailParts[1])) {
+            alert("Please enter a valid email address");
+            return false;
+        }
+        return true;
+    }
+
+    function validatePassword() {
+    var passwordInput = document.getElementById("passwordLogin").value;
+    console.log("Password input:", passwordInput);
+
+    // Regular expressions for each condition
+    var lowercaseRegex = /[a-z]/;
+    var uppercaseRegex = /[A-Z]/;
+    var digitRegex = /\d/;
+    var symbolRegex = /[@$!%*?&#]/;
+
+    // Check if all conditions are met
+    if (!lowercaseRegex.test(passwordInput) ||
+        !uppercaseRegex.test(passwordInput) ||
+        !digitRegex.test(passwordInput) ||
+        !symbolRegex.test(passwordInput) ||
+        passwordInput.length < 8) {
+        alert("Please enter a password with a mix of  at least one lowercase letter, one uppercase letter, one digit, one symbol, and a minimum length of 8 characters.");
+        return false;
+    }
+    return true;
+}
+});
+
+</script>
+
+
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+    'use strict';
+
+    var form = document.querySelector('#registerModal form');
+
+    form.addEventListener('submit', function (event) {
+        //event.preventDefault(); // Prevent the default form submission
+
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+        } else {
+            if (!validateName()) {
+                event.stopPropagation();
+                return;
+            }
+
+            if (!validateEmail()) {
+                event.stopPropagation();
+                return;
+            }
+
+            if (!validateMobile()) {
+                event.stopPropagation();
+                return;
+            }
+
+            if (!validatePassword()) {
+                event.stopPropagation();
+                return;
+            }
+            
+        }
+
+
+        form.classList.add('was-validated');
+    }, false);
+
+    // Custom validation functions
+    function validateName() {
+    var nameInput = document.getElementById("userName").value;
+    console.log("Name input:", nameInput);
+    var nameRegex = /^[A-Z][a-z]*(?: [A-Z][a-z]*)+$/; // Allows multiple words separated by spaces, each starting with an uppercase letter
+    if (!nameRegex.test(nameInput)) {
+        alert("Name format is incorrect. Please enter a valid name (e.g., 'John Doe').");
+        return false;
+    }
+    return true;
+}
+
+
+    function validateEmail() {
+        var emailInput = document.getElementById("email").value;
+        console.log("Email input:", emailInput);
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+        var commonExtensions = ['gmail.com', 'yahoo.com', 'hotmail.com']; // Add more common email extensions as needed
+        var emailParts = emailInput.split('@');
+        if (!emailRegex.test(emailInput) || !commonExtensions.includes(emailParts[1])) {
+            alert("Please enter a valid email address");
+            return false;
+        }
+        return true;
+    }
+
+    function validateMobile() {
+        var mobileInput = document.getElementById("mobile").value;
+        console.log("Mobile input:", mobileInput);
+        var mobileRegex = /^\+\d{12}$/; // Plus sign followed by 12 digits
+        if (!mobileRegex.test(mobileInput)) {
+            alert("Please enter a valid mobile number (e.g., '+254xxxxxxxxx')."); //starting with + and followed by 12 digits.
+            return false;
+        }
+        return true;
+    }
+
+    function validatePassword() {
+    var passwordInput = document.getElementById("password").value;
+    console.log("Password input:", passwordInput);
+
+    // Regular expressions for each condition
+    var lowercaseRegex = /[a-z]/;
+    var uppercaseRegex = /[A-Z]/;
+    var digitRegex = /\d/;
+    var symbolRegex = /[@$!%*?&#]/;
+
+    // Check if all conditions are met
+    if (!lowercaseRegex.test(passwordInput) ||
+        !uppercaseRegex.test(passwordInput) ||
+        !digitRegex.test(passwordInput) ||
+        !symbolRegex.test(passwordInput) ||
+        passwordInput.length < 8) {
+        alert("Please enter a password with a mix of  at least one lowercase letter, one uppercase letter, one digit, one symbol, and a minimum length of 8 characters.");
+        return false;
+    }
+    return true;
+}
+
+});
+
+</script>
+
+
+
+
+
+<script type="text/javascript">
+        var Messenger = function(el){
+  'use strict';
+  var m = this;
+  
+  m.init = function(){
+    m.codeletters = "&#*+%?£@§$";
+    m.message = 0;
+    m.current_length = 0;
+    m.fadeBuffer = false;
+    m.messages = [
+    	'Welcome to Recycle Trade Hub!',
+    	'Join us in promoting sustainability.',
+    	'Trade for a greener world: recycle with ease.',
+    	'Revolutionizing waste management with online hub.'
+    	
+    ];
+    
+    setTimeout(m.animateIn, 100);
+  };
+  
+  m.generateRandomString = function(length){
+    var random_text = '';
+    while(random_text.length < length){
+      random_text += m.codeletters.charAt(Math.floor(Math.random()*m.codeletters.length));
+    } 
+    
+    return random_text;
+  };
+  
+  m.animateIn = function(){
+    if(m.current_length < m.messages[m.message].length){
+      m.current_length = m.current_length + 2;
+      if(m.current_length > m.messages[m.message].length) {
+        m.current_length = m.messages[m.message].length;
+      }
+      
+      var message = m.generateRandomString(m.current_length);
+      $(el).html(message);
+      
+      setTimeout(m.animateIn, 20);
+    } else { 
+      setTimeout(m.animateFadeBuffer, 20);
+    }
+  };
+  
+  m.animateFadeBuffer = function(){
+    if(m.fadeBuffer === false){
+      m.fadeBuffer = [];
+      for(var i = 0; i < m.messages[m.message].length; i++){
+        m.fadeBuffer.push({c: (Math.floor(Math.random()*12))+1, l: m.messages[m.message].charAt(i)});
+      }
+    }
+    
+    var do_cycles = false;
+    var message = ''; 
+    
+    for(var i = 0; i < m.fadeBuffer.length; i++){
+      var fader = m.fadeBuffer[i];
+      if(fader.c > 0){
+        do_cycles = true;
+        fader.c--;
+        message += m.codeletters.charAt(Math.floor(Math.random()*m.codeletters.length));
+      } else {
+        message += fader.l;
+      }
+    }
+    
+    $(el).html(message);
+    
+    if(do_cycles === true){
+      setTimeout(m.animateFadeBuffer, 50);
+    } else {
+      setTimeout(m.cycleText, 2000);
+    }
+  };
+  
+  m.cycleText = function(){
+    m.message = m.message + 1;
+    if(m.message >= m.messages.length){
+      m.message = 0;
+    }
+    
+    m.current_length = 0;
+    m.fadeBuffer = false;
+    $(el).html('');
+    
+    setTimeout(m.animateIn, 200);
+  };
+  
+  m.init();
+}
+
+console.clear();
+var messenger = new Messenger($('#messenger'));
+        
+    </script>
+
+{% endblock  %}

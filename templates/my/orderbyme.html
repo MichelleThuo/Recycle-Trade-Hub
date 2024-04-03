@@ -1,0 +1,86 @@
+{%extends 'my/base.html' %}
+{% block body %}
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="h3 mb-2 font-weight-bold text-success">My Orders </h6>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Buyer</th>
+                        <th>Image</th>
+                        <th>products</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>date</th>
+                        <th>order status</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Buyer</th>
+                        <th>Image</th>
+                        <th>products</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>date</th>
+                        <th>order status</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                  
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block js%}
+<script> 
+async function getMyProducts() {
+  try {
+    const response = await fetch('/api/myorders/');
+    const data = await response.json();
+    console.log(data);
+    return data;   
+
+  } catch (error) {
+    console.log('Error fetching data:', error);
+    return 0;
+  }
+}
+var data=getMyProducts(); 
+console.log(data);
+$(document).ready(function() {
+      $('#dataTable').DataTable();
+    });
+    // Populate DataTable
+          var table = $('#dataTable').DataTable();
+    
+          // Add data to the DataTable
+          data.then(d=>{
+          d.forEach(function(item) {
+             table.row.add([item.buyer.username, `<img src="${item.products.photo}" width="50px" height="50px"/>`,  item.products.productName, item.qty, item.price, item.date,`<button class="remove-btn" style="border: 0;">${item.order_status}</button>`]).draw();
+          });
+        });
+    
+          // Event listener for remove button
+          $('#dataTable tbody').on('click', '.remove-btn', function() {
+             var row = $(this).closest('tr');
+             var rowData = table.row(row).data();
+    
+             // Display a confirmation message with custom content
+             var confirmationMessage = 'Are you sure you want to remove ' + rowData[0] + ' (' + rowData[1] + ')?';
+    
+             if (confirm(confirmationMessage)) {
+                // If the user confirms, remove the row
+                table.row(row).remove().draw();
+             }
+          });
+    </script>
+     
+{%endblock%}

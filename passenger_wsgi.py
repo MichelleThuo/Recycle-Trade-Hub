@@ -1,0 +1,1 @@
+from rthbackend.wsgi import application

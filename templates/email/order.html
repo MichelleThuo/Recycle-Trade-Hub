@@ -1,0 +1,24 @@
+
+
+<h2 style="color: gray;">Hello {{fname}} {{lname}},</h2>
+<h3 style="color:darkorchid;">We Have Received Your Order Of the following items</h3>
+<table border="1" style="border-collapse: collapse; border:1px; ">
+    <tr style="background-color: cornflowerblue; color: white;">
+        <th>Quantity</th>
+        <th style="width: 100%;">Items</th>
+        <th>Price</th>
+    </tr>
+    {%for c in cart%}
+    <tr style="border: 1px solid black;">
+        <td>{{c.qty}}</td>
+        <td style="width: 100%;">{{c.product.productName}}</td>
+        <td>{{c.product.price}} each</td>
+
+    </tr>
+    {%endfor%}
+</table>
+<p>Thank you for shopping with us.</p>
+<p>Regards</p>
+<p>Michelle Thuo.</p>
+<p>&copy; RecycleTradeHub</p>
+

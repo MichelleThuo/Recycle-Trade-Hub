@@ -1,0 +1,14 @@
+
+
+Hello {{fname}} {{lname}},
+We Have Received Your Order Of the following items
+
+    {%for c in cart%}
+    {{c.qty}} - {{c.product.productName}}
+    {%endfor%}
+
+Thank you for shopping with us.
+Reguards
+Michelle Thuo
+&copy; RecycleTradeHub
+
